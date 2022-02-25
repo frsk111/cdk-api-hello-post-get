@@ -23,7 +23,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/414689cc1b245d91a7996e4ac32479642448d8b903ead0cb1e65655298abc847.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/74c14e2a6eb9e5920147a449a67d387c920d230f601e6353d2ac7c6eb1b3660c.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -39,94 +39,312 @@
         "cdkApiHelloPostGet.assets"
       ],
       "metadata": {
-        "/cdkApiHelloPostGet/HelloHandler/ServiceRole/Resource": [
+        "/cdkApiHelloPostGet/todoTable": [
           {
-            "type": "aws:cdk:logicalId",
-            "data": "HelloHandlerServiceRole11EF7C63"
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "todoTableC937F2F9"
+            }
           }
         ],
-        "/cdkApiHelloPostGet/HelloHandler/Resource": [
+        "/cdkApiHelloPostGet/todoTable/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "HelloHandler2E4FBA4D"
+            "data": "todoTableC937F2F9"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Resource": [
+        "/cdkApiHelloPostGet/todoTableName": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointEEF1FD8F"
+            "data": "todoTableName"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/CloudWatchRole/Resource": [
+        "/cdkApiHelloPostGet/createTodoFn/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointCloudWatchRoleC3C64E0F"
+            "data": "createTodoFnServiceRole90383E63"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Account": [
+        "/cdkApiHelloPostGet/createTodoFn/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointAccountB8304247"
+            "data": "createTodoFnServiceRoleDefaultPolicyF525E1C8"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Deployment/Resource": [
+        "/cdkApiHelloPostGet/createTodoFn/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointDeployment318525DA4a14aa7e59b07f01b234c43773e80c50"
+            "data": "createTodoFn907009D7"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/DeploymentStage.prod/Resource": [
+        "/cdkApiHelloPostGet/updateTodoFn/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointDeploymentStageprodB78BEEA0"
+            "data": "updateTodoFnServiceRole2EED8E72"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Endpoint": [
+        "/cdkApiHelloPostGet/updateTodoFn/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "Endpoint8024A810"
+            "data": "updateTodoFnServiceRoleDefaultPolicy55FC1DBD"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/{proxy+}/Resource": [
+        "/cdkApiHelloPostGet/updateTodoFn/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "Endpointproxy39E2174E"
+            "data": "updateTodoFn9D80B4E7"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpoint7614F491.ANY..{proxy+}": [
+        "/cdkApiHelloPostGet/crudTodoFn/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointproxyANYApiPermissioncdkApiHelloPostGetEndpoint7614F491ANYproxyEA23589B"
+            "data": "crudTodoFnServiceRole223D49BF"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpoint7614F491.ANY..{proxy+}": [
+        "/cdkApiHelloPostGet/crudTodoFn/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointproxyANYApiPermissionTestcdkApiHelloPostGetEndpoint7614F491ANYproxyC3C4C612"
+            "data": "crudTodoFnServiceRoleDefaultPolicy69D5A6E0"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/Resource": [
+        "/cdkApiHelloPostGet/crudTodoFn/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointproxyANYC09721C5"
+            "data": "crudTodoFn9FE9433C"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpoint7614F491.ANY..": [
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointANYApiPermissioncdkApiHelloPostGetEndpoint7614F491ANY8097F2EB"
+            "data": "EndpointApiCrudGetPost72E42F4D"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpoint7614F491.ANY..": [
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/CloudWatchRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointANYApiPermissionTestcdkApiHelloPostGetEndpoint7614F491ANY59D19796"
+            "data": "EndpointApiCrudGetPostCloudWatchRole98188867"
           }
         ],
-        "/cdkApiHelloPostGet/Endpoint/Default/ANY/Resource": [
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Account": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "EndpointANY485C938B"
+            "data": "EndpointApiCrudGetPostAccountB347E8F4"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostDeployment29D96E82330b9dae2afb6c81c116d4130c439375"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostDeploymentStageprod3CA6139A"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostEndpointAC066228"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostproxyCF4F2D34"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostproxyANYApiPermissioncdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYproxy6F732F6A"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYproxyD5274328"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostproxyANY7E2491AC"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostANYApiPermissioncdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYE7B560B7"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANY620489AA"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudGetPostANY586DB83F"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateD9CCBCF1"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateCloudWatchRole1475811F"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateAccountD5C6540D"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateDeploymentC7C6B9035ac16914a9503b1bf26c6540a2ce6d58"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateDeploymentStageprodA136A855"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateEndpoint287195F1"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateproxy9E1BAC98"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateproxyANYApiPermissioncdkApiHelloPostGetEndpointApiUpdate888B76DBANYproxyBBAA5822"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiUpdate888B76DBANYproxy9F7B380C"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateproxyANY69F1BAB0"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateANYApiPermissioncdkApiHelloPostGetEndpointApiUpdate888B76DBANYEEEA5109"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateANYApiPermissionTestcdkApiHelloPostGetEndpointApiUpdate888B76DBANY2E595F1C"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiUpdateANY94549D68"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrud03F7A092"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudCloudWatchRole78FBE33D"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudAccount0580712A"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudDeploymentC33730BC4cc7637e2076c550fd3d81ca5db1da6a"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudDeploymentStageprod2B5345D7"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudEndpoint72633CF3"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudproxyF80CE757"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudproxyANYApiPermissioncdkApiHelloPostGetEndpointApiCrud95B559D9ANYproxy96175D55"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrud95B559D9ANYproxyD4155013"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudproxyANY6872F6B8"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudANYApiPermissioncdkApiHelloPostGetEndpointApiCrud95B559D9ANY7929AB0D"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrud95B559D9ANYF41F3BA2"
+          }
+        ],
+        "/cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EndpointApiCrudANY8233FDFE"
           }
         ],
         "/cdkApiHelloPostGet/CDKMetadata/Default": [

@@ -1,6 +1,33 @@
 {
   "Resources": {
-    "HelloHandlerServiceRole11EF7C63": {
+    "todoTableC937F2F9": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        },
+        "TableName": "dbProvaApiCrudGetPost"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/todoTable/Resource"
+      }
+    },
+    "createTodoFnServiceRole90383E63": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -31,52 +58,340 @@
         ]
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/HelloHandler/ServiceRole/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/createTodoFn/ServiceRole/Resource"
       }
     },
-    "HelloHandler2E4FBA4D": {
+    "createTodoFnServiceRoleDefaultPolicyF525E1C8": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "todoTableC937F2F9",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "createTodoFnServiceRoleDefaultPolicyF525E1C8",
+        "Roles": [
+          {
+            "Ref": "createTodoFnServiceRole90383E63"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/createTodoFn/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "createTodoFn907009D7": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
           },
-          "S3Key": "dd40b5829909ca2be0fb70a69610d7c1310a41d47ac1f6727f2b063893285d3c.zip"
+          "S3Key": "2b02f34e353b0bc562006329a0c175c0d5069d87dd762a3d70805a69fdab4a5e.zip"
         },
         "Role": {
           "Fn::GetAtt": [
-            "HelloHandlerServiceRole11EF7C63",
+            "createTodoFnServiceRole90383E63",
             "Arn"
           ]
         },
         "Environment": {
           "Variables": {
+            "TODO_TABLE_NAME": {
+              "Ref": "todoTableC937F2F9"
+            },
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
           }
         },
-        "Handler": "index.handler",
+        "Handler": "index.createTodo",
         "Runtime": "nodejs14.x"
       },
       "DependsOn": [
-        "HelloHandlerServiceRole11EF7C63"
+        "createTodoFnServiceRoleDefaultPolicyF525E1C8",
+        "createTodoFnServiceRole90383E63"
       ],
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/HelloHandler/Resource",
-        "aws:asset:path": "asset.dd40b5829909ca2be0fb70a69610d7c1310a41d47ac1f6727f2b063893285d3c",
+        "aws:cdk:path": "cdkApiHelloPostGet/createTodoFn/Resource",
+        "aws:asset:path": "asset.2b02f34e353b0bc562006329a0c175c0d5069d87dd762a3d70805a69fdab4a5e",
         "aws:asset:is-bundled": true,
         "aws:asset:property": "Code"
       }
     },
-    "EndpointEEF1FD8F": {
-      "Type": "AWS::ApiGateway::RestApi",
+    "updateTodoFnServiceRole2EED8E72": {
+      "Type": "AWS::IAM::Role",
       "Properties": {
-        "Name": "Endpoint"
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/updateTodoFn/ServiceRole/Resource"
       }
     },
-    "EndpointCloudWatchRoleC3C64E0F": {
+    "updateTodoFnServiceRoleDefaultPolicy55FC1DBD": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "todoTableC937F2F9",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "updateTodoFnServiceRoleDefaultPolicy55FC1DBD",
+        "Roles": [
+          {
+            "Ref": "updateTodoFnServiceRole2EED8E72"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/updateTodoFn/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "updateTodoFn9D80B4E7": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "e1298c5b752d9765d0fa2aa8c86da8c4189dfe3ed705a851842dadde5d9715bd.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "updateTodoFnServiceRole2EED8E72",
+            "Arn"
+          ]
+        },
+        "Architectures": [
+          "arm64"
+        ],
+        "Environment": {
+          "Variables": {
+            "TODO_TABLE_NAME": "dbProvaApiCrudGetPost",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.updateTodo",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "updateTodoFnServiceRoleDefaultPolicy55FC1DBD",
+        "updateTodoFnServiceRole2EED8E72"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/updateTodoFn/Resource",
+        "aws:asset:path": "asset.e1298c5b752d9765d0fa2aa8c86da8c4189dfe3ed705a851842dadde5d9715bd",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "crudTodoFnServiceRole223D49BF": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/crudTodoFn/ServiceRole/Resource"
+      }
+    },
+    "crudTodoFnServiceRoleDefaultPolicy69D5A6E0": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "todoTableC937F2F9",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "crudTodoFnServiceRoleDefaultPolicy69D5A6E0",
+        "Roles": [
+          {
+            "Ref": "crudTodoFnServiceRole223D49BF"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/crudTodoFn/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "crudTodoFn9FE9433C": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "7dd1c2cf703bece7f8e5e6c6ab4aad785f60b0b0086a46bb6a5ec5254bd86f58.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "crudTodoFnServiceRole223D49BF",
+            "Arn"
+          ]
+        },
+        "Architectures": [
+          "arm64"
+        ],
+        "Environment": {
+          "Variables": {
+            "TODO_TABLE_NAME": {
+              "Ref": "todoTableC937F2F9"
+            },
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.crudTodo",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "crudTodoFnServiceRoleDefaultPolicy69D5A6E0",
+        "crudTodoFnServiceRole223D49BF"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/crudTodoFn/Resource",
+        "aws:asset:path": "asset.7dd1c2cf703bece7f8e5e6c6ab4aad785f60b0b0086a46bb6a5ec5254bd86f58",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "EndpointApiCrudGetPost72E42F4D": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "EndpointApiCrudGetPost"
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Resource"
+      }
+    },
+    "EndpointApiCrudGetPostCloudWatchRole98188867": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -107,86 +422,86 @@
         ]
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/CloudWatchRole/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/CloudWatchRole/Resource"
       }
     },
-    "EndpointAccountB8304247": {
+    "EndpointApiCrudGetPostAccountB347E8F4": {
       "Type": "AWS::ApiGateway::Account",
       "Properties": {
         "CloudWatchRoleArn": {
           "Fn::GetAtt": [
-            "EndpointCloudWatchRoleC3C64E0F",
+            "EndpointApiCrudGetPostCloudWatchRole98188867",
             "Arn"
           ]
         }
       },
       "DependsOn": [
-        "EndpointEEF1FD8F"
+        "EndpointApiCrudGetPost72E42F4D"
       ],
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Account"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Account"
       }
     },
-    "EndpointDeployment318525DA4a14aa7e59b07f01b234c43773e80c50": {
+    "EndpointApiCrudGetPostDeployment29D96E82330b9dae2afb6c81c116d4130c439375": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
-          "Ref": "EndpointEEF1FD8F"
+          "Ref": "EndpointApiCrudGetPost72E42F4D"
         },
         "Description": "Automatically created by the RestApi construct"
       },
       "DependsOn": [
-        "EndpointproxyANYC09721C5",
-        "Endpointproxy39E2174E",
-        "EndpointANY485C938B"
+        "EndpointApiCrudGetPostproxyANY7E2491AC",
+        "EndpointApiCrudGetPostproxyCF4F2D34",
+        "EndpointApiCrudGetPostANY586DB83F"
       ],
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Deployment/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Deployment/Resource"
       }
     },
-    "EndpointDeploymentStageprodB78BEEA0": {
+    "EndpointApiCrudGetPostDeploymentStageprod3CA6139A": {
       "Type": "AWS::ApiGateway::Stage",
       "Properties": {
         "RestApiId": {
-          "Ref": "EndpointEEF1FD8F"
+          "Ref": "EndpointApiCrudGetPost72E42F4D"
         },
         "DeploymentId": {
-          "Ref": "EndpointDeployment318525DA4a14aa7e59b07f01b234c43773e80c50"
+          "Ref": "EndpointApiCrudGetPostDeployment29D96E82330b9dae2afb6c81c116d4130c439375"
         },
         "StageName": "prod"
       },
       "DependsOn": [
-        "EndpointAccountB8304247"
+        "EndpointApiCrudGetPostAccountB347E8F4"
       ],
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/DeploymentStage.prod/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/DeploymentStage.prod/Resource"
       }
     },
-    "Endpointproxy39E2174E": {
+    "EndpointApiCrudGetPostproxyCF4F2D34": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
-            "EndpointEEF1FD8F",
+            "EndpointApiCrudGetPost72E42F4D",
             "RootResourceId"
           ]
         },
         "PathPart": "{proxy+}",
         "RestApiId": {
-          "Ref": "EndpointEEF1FD8F"
+          "Ref": "EndpointApiCrudGetPost72E42F4D"
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/{proxy+}/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/Resource"
       }
     },
-    "EndpointproxyANYApiPermissioncdkApiHelloPostGetEndpoint7614F491ANYproxyEA23589B": {
+    "EndpointApiCrudGetPostproxyANYApiPermissioncdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYproxy6F732F6A": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "HelloHandler2E4FBA4D",
+            "createTodoFn907009D7",
             "Arn"
           ]
         },
@@ -209,11 +524,11 @@
               },
               ":",
               {
-                "Ref": "EndpointEEF1FD8F"
+                "Ref": "EndpointApiCrudGetPost72E42F4D"
               },
               "/",
               {
-                "Ref": "EndpointDeploymentStageprodB78BEEA0"
+                "Ref": "EndpointApiCrudGetPostDeploymentStageprod3CA6139A"
               },
               "/*/*"
             ]
@@ -221,16 +536,16 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpoint7614F491.ANY..{proxy+}"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..{proxy+}"
       }
     },
-    "EndpointproxyANYApiPermissionTestcdkApiHelloPostGetEndpoint7614F491ANYproxyC3C4C612": {
+    "EndpointApiCrudGetPostproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYproxyD5274328": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "HelloHandler2E4FBA4D",
+            "createTodoFn907009D7",
             "Arn"
           ]
         },
@@ -253,7 +568,7 @@
               },
               ":",
               {
-                "Ref": "EndpointEEF1FD8F"
+                "Ref": "EndpointApiCrudGetPost72E42F4D"
               },
               "/test-invoke-stage/*/*"
             ]
@@ -261,18 +576,18 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpoint7614F491.ANY..{proxy+}"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY..{proxy+}"
       }
     },
-    "EndpointproxyANYC09721C5": {
+    "EndpointApiCrudGetPostproxyANY7E2491AC": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "ANY",
         "ResourceId": {
-          "Ref": "Endpointproxy39E2174E"
+          "Ref": "EndpointApiCrudGetPostproxyCF4F2D34"
         },
         "RestApiId": {
-          "Ref": "EndpointEEF1FD8F"
+          "Ref": "EndpointApiCrudGetPost72E42F4D"
         },
         "AuthorizationType": "NONE",
         "Integration": {
@@ -293,7 +608,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "HelloHandler2E4FBA4D",
+                    "createTodoFn907009D7",
                     "Arn"
                   ]
                 },
@@ -304,16 +619,16 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/{proxy+}/ANY/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/{proxy+}/ANY/Resource"
       }
     },
-    "EndpointANYApiPermissioncdkApiHelloPostGetEndpoint7614F491ANY8097F2EB": {
+    "EndpointApiCrudGetPostANYApiPermissioncdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANYE7B560B7": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "HelloHandler2E4FBA4D",
+            "createTodoFn907009D7",
             "Arn"
           ]
         },
@@ -336,11 +651,11 @@
               },
               ":",
               {
-                "Ref": "EndpointEEF1FD8F"
+                "Ref": "EndpointApiCrudGetPost72E42F4D"
               },
               "/",
               {
-                "Ref": "EndpointDeploymentStageprodB78BEEA0"
+                "Ref": "EndpointApiCrudGetPostDeploymentStageprod3CA6139A"
               },
               "/*/"
             ]
@@ -348,16 +663,16 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpoint7614F491.ANY.."
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY.."
       }
     },
-    "EndpointANYApiPermissionTestcdkApiHelloPostGetEndpoint7614F491ANY59D19796": {
+    "EndpointApiCrudGetPostANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560ANY620489AA": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "HelloHandler2E4FBA4D",
+            "createTodoFn907009D7",
             "Arn"
           ]
         },
@@ -380,7 +695,7 @@
               },
               ":",
               {
-                "Ref": "EndpointEEF1FD8F"
+                "Ref": "EndpointApiCrudGetPost72E42F4D"
               },
               "/test-invoke-stage/*/"
             ]
@@ -388,21 +703,21 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpoint7614F491.ANY.."
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrudGetPost3FB9E560.ANY.."
       }
     },
-    "EndpointANY485C938B": {
+    "EndpointApiCrudGetPostANY586DB83F": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "ANY",
         "ResourceId": {
           "Fn::GetAtt": [
-            "EndpointEEF1FD8F",
+            "EndpointApiCrudGetPost72E42F4D",
             "RootResourceId"
           ]
         },
         "RestApiId": {
-          "Ref": "EndpointEEF1FD8F"
+          "Ref": "EndpointApiCrudGetPost72E42F4D"
         },
         "AuthorizationType": "NONE",
         "Integration": {
@@ -423,7 +738,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "HelloHandler2E4FBA4D",
+                    "createTodoFn907009D7",
                     "Arn"
                   ]
                 },
@@ -434,13 +749,753 @@
         }
       },
       "Metadata": {
-        "aws:cdk:path": "cdkApiHelloPostGet/Endpoint/Default/ANY/Resource"
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrudGetPost/Default/ANY/Resource"
+      }
+    },
+    "EndpointApiUpdateD9CCBCF1": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "EndpointApiUpdate"
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Resource"
+      }
+    },
+    "EndpointApiUpdateCloudWatchRole1475811F": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/CloudWatchRole/Resource"
+      }
+    },
+    "EndpointApiUpdateAccountD5C6540D": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "EndpointApiUpdateCloudWatchRole1475811F",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "EndpointApiUpdateD9CCBCF1"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Account"
+      }
+    },
+    "EndpointApiUpdateDeploymentC7C6B9035ac16914a9503b1bf26c6540a2ce6d58": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "EndpointApiUpdateD9CCBCF1"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "EndpointApiUpdateproxyANY69F1BAB0",
+        "EndpointApiUpdateproxy9E1BAC98",
+        "EndpointApiUpdateANY94549D68"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Deployment/Resource"
+      }
+    },
+    "EndpointApiUpdateDeploymentStageprodA136A855": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "EndpointApiUpdateD9CCBCF1"
+        },
+        "DeploymentId": {
+          "Ref": "EndpointApiUpdateDeploymentC7C6B9035ac16914a9503b1bf26c6540a2ce6d58"
+        },
+        "StageName": "prod"
+      },
+      "DependsOn": [
+        "EndpointApiUpdateAccountD5C6540D"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/DeploymentStage.prod/Resource"
+      }
+    },
+    "EndpointApiUpdateproxy9E1BAC98": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "EndpointApiUpdateD9CCBCF1",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "{proxy+}",
+        "RestApiId": {
+          "Ref": "EndpointApiUpdateD9CCBCF1"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/Resource"
+      }
+    },
+    "EndpointApiUpdateproxyANYApiPermissioncdkApiHelloPostGetEndpointApiUpdate888B76DBANYproxyBBAA5822": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "updateTodoFn9D80B4E7",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiUpdateD9CCBCF1"
+              },
+              "/",
+              {
+                "Ref": "EndpointApiUpdateDeploymentStageprodA136A855"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..{proxy+}"
+      }
+    },
+    "EndpointApiUpdateproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiUpdate888B76DBANYproxy9F7B380C": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "updateTodoFn9D80B4E7",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiUpdateD9CCBCF1"
+              },
+              "/test-invoke-stage/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY..{proxy+}"
+      }
+    },
+    "EndpointApiUpdateproxyANY69F1BAB0": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Ref": "EndpointApiUpdateproxy9E1BAC98"
+        },
+        "RestApiId": {
+          "Ref": "EndpointApiUpdateD9CCBCF1"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "updateTodoFn9D80B4E7",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/{proxy+}/ANY/Resource"
+      }
+    },
+    "EndpointApiUpdateANYApiPermissioncdkApiHelloPostGetEndpointApiUpdate888B76DBANYEEEA5109": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "updateTodoFn9D80B4E7",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiUpdateD9CCBCF1"
+              },
+              "/",
+              {
+                "Ref": "EndpointApiUpdateDeploymentStageprodA136A855"
+              },
+              "/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY.."
+      }
+    },
+    "EndpointApiUpdateANYApiPermissionTestcdkApiHelloPostGetEndpointApiUpdate888B76DBANY2E595F1C": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "updateTodoFn9D80B4E7",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiUpdateD9CCBCF1"
+              },
+              "/test-invoke-stage/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiUpdate888B76DB.ANY.."
+      }
+    },
+    "EndpointApiUpdateANY94549D68": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "EndpointApiUpdateD9CCBCF1",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "EndpointApiUpdateD9CCBCF1"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "updateTodoFn9D80B4E7",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiUpdate/Default/ANY/Resource"
+      }
+    },
+    "EndpointApiCrud03F7A092": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "crud111"
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Resource"
+      }
+    },
+    "EndpointApiCrudCloudWatchRole78FBE33D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/CloudWatchRole/Resource"
+      }
+    },
+    "EndpointApiCrudAccount0580712A": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "EndpointApiCrudCloudWatchRole78FBE33D",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "EndpointApiCrud03F7A092"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Account"
+      }
+    },
+    "EndpointApiCrudDeploymentC33730BC4cc7637e2076c550fd3d81ca5db1da6a": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "EndpointApiCrud03F7A092"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "EndpointApiCrudproxyANY6872F6B8",
+        "EndpointApiCrudproxyF80CE757",
+        "EndpointApiCrudANY8233FDFE"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Deployment/Resource"
+      }
+    },
+    "EndpointApiCrudDeploymentStageprod2B5345D7": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "EndpointApiCrud03F7A092"
+        },
+        "DeploymentId": {
+          "Ref": "EndpointApiCrudDeploymentC33730BC4cc7637e2076c550fd3d81ca5db1da6a"
+        },
+        "StageName": "prod"
+      },
+      "DependsOn": [
+        "EndpointApiCrudAccount0580712A"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/DeploymentStage.prod/Resource"
+      }
+    },
+    "EndpointApiCrudproxyF80CE757": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "EndpointApiCrud03F7A092",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "{proxy+}",
+        "RestApiId": {
+          "Ref": "EndpointApiCrud03F7A092"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/Resource"
+      }
+    },
+    "EndpointApiCrudproxyANYApiPermissioncdkApiHelloPostGetEndpointApiCrud95B559D9ANYproxy96175D55": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "crudTodoFn9FE9433C",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiCrud03F7A092"
+              },
+              "/",
+              {
+                "Ref": "EndpointApiCrudDeploymentStageprod2B5345D7"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..{proxy+}"
+      }
+    },
+    "EndpointApiCrudproxyANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrud95B559D9ANYproxyD4155013": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "crudTodoFn9FE9433C",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiCrud03F7A092"
+              },
+              "/test-invoke-stage/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY..{proxy+}"
+      }
+    },
+    "EndpointApiCrudproxyANY6872F6B8": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Ref": "EndpointApiCrudproxyF80CE757"
+        },
+        "RestApiId": {
+          "Ref": "EndpointApiCrud03F7A092"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "crudTodoFn9FE9433C",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/{proxy+}/ANY/Resource"
+      }
+    },
+    "EndpointApiCrudANYApiPermissioncdkApiHelloPostGetEndpointApiCrud95B559D9ANY7929AB0D": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "crudTodoFn9FE9433C",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiCrud03F7A092"
+              },
+              "/",
+              {
+                "Ref": "EndpointApiCrudDeploymentStageprod2B5345D7"
+              },
+              "/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/ApiPermission.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY.."
+      }
+    },
+    "EndpointApiCrudANYApiPermissionTestcdkApiHelloPostGetEndpointApiCrud95B559D9ANYF41F3BA2": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "crudTodoFn9FE9433C",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "EndpointApiCrud03F7A092"
+              },
+              "/test-invoke-stage/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/ApiPermission.Test.cdkApiHelloPostGetEndpointApiCrud95B559D9.ANY.."
+      }
+    },
+    "EndpointApiCrudANY8233FDFE": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "EndpointApiCrud03F7A092",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "EndpointApiCrud03F7A092"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "crudTodoFn9FE9433C",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkApiHelloPostGet/EndpointApiCrud/Default/ANY/Resource"
       }
     },
     "CDKMetadata": {
       "Type": "AWS::CDK::Metadata",
       "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VQy1LDMAz8Fu6OoHSm97QMpwKd8AEZ1xHBediZSG7JZPLvyA7P067W0nqle9hs4e5GXykzVZt19gzzK2vTKpHKudP9udKl8xU2BM8JHoMzbL1TVvcwF75DdXhzERdF21ITIRPkEaSGfTAt8l4TqtUNZmn/MRF+wrG3RFItSg+21oxXPcF8TO0FEueDTX/80twYHxyrBxw6P/UoVNQ/lSxRp2ArkVEfRoMpx2n0H9O38mW88ifkd19FaWXLotIi0cS6Oj68BB4C/5sSfvCuspxWiMeChm4vmx3E2zZkbTZKWNsjFCt+Am+X3m53AQAA"
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VRy07DMBD8Fu7OQqnEPS3ixKMK3KONvZRNYjuKbUoU5d+xnQLlNA95xrv2LWy2cHOFJ1dI1RU9NzC/epSdiFY9q8mgtiqab9j0JPbvJpNF9KgbhbWxiloHzxkegpGerRGMGubKroGMB9uznJJc2SLctkbnyDsoE0QNuyA78jt0dK6HOQZ+W1OYRs3ORbUIHPiInk44wfyYj1fkfDlwvvSPllLaYLy4p6G3k6ZIo3uh4r7HPOlKYtSGUVKe4zDar+nHORev/In8h1XJWtmyiMtzL8EPwYu8W+plc/wXj3xvjWKfd0nPCK27/tzcQfqP1jEXY5yaNUG14jfMkMKpqwEAAA=="
       },
       "Metadata": {
         "aws:cdk:path": "cdkApiHelloPostGet/CDKMetadata/Default"
@@ -449,14 +1504,19 @@
     }
   },
   "Outputs": {
-    "Endpoint8024A810": {
+    "todoTableName": {
+      "Value": {
+        "Ref": "todoTableC937F2F9"
+      }
+    },
+    "EndpointApiCrudGetPostEndpointAC066228": {
       "Value": {
         "Fn::Join": [
           "",
           [
             "https://",
             {
-              "Ref": "EndpointEEF1FD8F"
+              "Ref": "EndpointApiCrudGetPost72E42F4D"
             },
             ".execute-api.",
             {
@@ -468,7 +1528,59 @@
             },
             "/",
             {
-              "Ref": "EndpointDeploymentStageprodB78BEEA0"
+              "Ref": "EndpointApiCrudGetPostDeploymentStageprod3CA6139A"
+            },
+            "/"
+          ]
+        ]
+      }
+    },
+    "EndpointApiUpdateEndpoint287195F1": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "EndpointApiUpdateD9CCBCF1"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "EndpointApiUpdateDeploymentStageprodA136A855"
+            },
+            "/"
+          ]
+        ]
+      }
+    },
+    "EndpointApiCrudEndpoint72633CF3": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "EndpointApiCrud03F7A092"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "EndpointApiCrudDeploymentStageprod2B5345D7"
             },
             "/"
           ]
