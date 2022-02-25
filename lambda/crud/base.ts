@@ -1,5 +1,5 @@
 import { APIGatewayProxyResult } from "aws-lambda";
-import { DeleteItemInput, DynamoDB, PutItemInput, ScanInput, UpdateItemInput } from '@aws-sdk/client-dynamodb';
+import { DeleteItemInput, DynamoDB, GetItemInput, PutItemInput, ScanInput, UpdateItemInput } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { v4 as uuid } from 'uuid';
 
@@ -33,7 +33,13 @@ interface GetInputInterface {
 }
 
 
-export async function createTodo(body: any){
+export async function createTodo(event: any){
+
+    const { body } = event
+    if (!body) {
+        return sendFail('invalid request: body undefined !')
+    }    
+
     const { id, nome, cognome, luogo } = JSON.parse(body) as CreateInputInterface
     const dynamoClient = new DynamoDB({ 
         region: 'us-east-1' 
@@ -61,7 +67,12 @@ export async function createTodo(body: any){
     }
 };
 
-export async function updateTodo(body: any) {
+export async function updateTodo(event: any) {
+
+    const { body } = event
+    if (!body) {
+        return sendFail('invalid request: body undefined !')
+    }
 
     const { id, nome, cognome, luogo } = JSON.parse(body) as UpdateInputInterface
     const dynamoClient = new DynamoDB({ 
@@ -93,7 +104,11 @@ export async function updateTodo(body: any) {
     }
 }
 
-export async function deleteTodo(body: any) {
+export async function deleteTodo(event: any) {
+    const { body } = event
+    if (!body) {
+        return sendFail('invalid request: body undefined !')
+    }
     const { id } = JSON.parse(body) as DeleteInputInterface
     const dynamoClient = new DynamoDB({ 
         region: 'us-east-1' 
@@ -139,12 +154,39 @@ export async function getAll() {
                 message: 'something went wrong'
             })
         }
-    }
-    
+    }    
 }
 
-function sendFail(message: string): APIGatewayProxyResult {
+export async function getOne(event: any) {  
+    //return sendFail(event) 
+    const { queryStringParameters } = event;   
+    //return sendFail(queryStringParameters.id);
+    if (!queryStringParameters){return sendFail('invalid request')};    
+       
     
+    const dynamoClient = new DynamoDB({ 
+        region: 'us-east-1' 
+    });
+    const getTodo: GetItemInput = {
+        Key: marshall({
+            id: queryStringParameters.id
+        }),
+        TableName: process.env.TODO_TABLE_NAME
+    };    
+    try {
+        const { Item } = await dynamoClient.getItem(getTodo);
+        const todo = Item ? unmarshall(Item) : null;
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ todo })
+        };
+    } catch (err) {
+        console.log(err);
+        return sendFail('something went wrong');
+    }
+}
+
+function sendFail(message: string): APIGatewayProxyResult {    
     return {
         statusCode: 400,
         body: JSON.stringify({ message })

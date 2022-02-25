@@ -349,7 +349,7 @@
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
           },
-          "S3Key": "7dd1c2cf703bece7f8e5e6c6ab4aad785f60b0b0086a46bb6a5ec5254bd86f58.zip"
+          "S3Key": "11d145c648cdde21f8159158ebb26a6a99300afe759968d6c6c7b4b29cf27201.zip"
         },
         "Role": {
           "Fn::GetAtt": [
@@ -377,7 +377,7 @@
       ],
       "Metadata": {
         "aws:cdk:path": "cdkApiHelloPostGet/crudTodoFn/Resource",
-        "aws:asset:path": "asset.7dd1c2cf703bece7f8e5e6c6ab4aad785f60b0b0086a46bb6a5ec5254bd86f58",
+        "aws:asset:path": "asset.11d145c648cdde21f8159158ebb26a6a99300afe759968d6c6c7b4b29cf27201",
         "aws:asset:is-bundled": true,
         "aws:asset:property": "Code"
       }
