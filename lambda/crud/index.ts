@@ -3,14 +3,7 @@ import { createTodo, updateTodo, deleteTodo, getAll, getOne } from './base';
 
 export async function crudTodo(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {    
          
-    let operApi:any;
-    // let operApiGet:any;
-    // if(event.httpMethod === "GET") {        
-    //     if (event.queryStringParameters){ operApiGet = getOne(event); }
-    //     else { operApiGet = getAll(); }   
-    //     console.log(operApiGet); 
-    // }
-   
+    let operApi:any;   
 
     if(event.httpMethod === "POST") {        
         operApi = createTodo(event);  
@@ -26,36 +19,7 @@ export async function crudTodo(event: APIGatewayProxyEvent): Promise<APIGatewayP
     }
     if(event.httpMethod === "GET" && !event.queryStringParameters) {        
         operApi = getAll();
-    }
-    
-    // switch(event.httpMethod) { 
-    //     case "POST": { 
-    //         operApi = createTodo(event);  
-    //         break; 
-    //     } 
-    //     case "PUT": { 
-    //         operApi = updateTodo(event);  
-    //         break; 
-    //     } 
-    //     case "DELETE": { 
-    //         operApi = deleteTodo(event);  
-    //         break; 
-    //     }
-    //     case "GET": { 
-    //         if (event.queryStringParameters){ 
-    //           operApi =getOne(event); 
-    //         }
-    //         else 
-    //         { 
-    //           operApi = getAll();
-    //         }             
-    //         break; 
-    //     }  
-    //     default: { 
-    //         return sendFail('error with http method')
-    //         break; 
-    //     } 
-    // }
+    }   
 
     return operApi;          
 

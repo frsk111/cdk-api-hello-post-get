@@ -10,7 +10,7 @@ export class cdkApiHelloPostGet extends Stack {
     super(scope, id, props);
 
     // ------------------ DYNAMODB ----------------- //
-    // -- parte di creazione tabella
+    // -- create table
     const todoTable = new Table(this, 'todoTable', {
       tableName: 'dbProvaApiCrudGetPost',
       partitionKey: {
@@ -25,33 +25,7 @@ export class cdkApiHelloPostGet extends Stack {
       value: todoTable.tableName
     });
 
-    // -- parte di inserimento dati in tabella (CREATE)
-    const createTodoFn = new NodejsFunction(this, 'createTodoFn', {
-      runtime: Runtime.NODEJS_14_X,
-      entry: `${__dirname}/../lambda/create/index.ts`,
-      handler: 'createTodo',
-      environment: {
-       TODO_TABLE_NAME: todoTable.tableName
-      }
-    });    
-    // autorizzazioni ruoli
-    todoTable.grantReadWriteData(createTodoFn)
-
-    // -- parte di aggiornamento dati in tabella (UPDATE)
-    const updateTodoFn = new NodejsFunction(this, 'updateTodoFn', {
-      runtime: Runtime.NODEJS_14_X,
-      entry: `${__dirname}/../lambda/update/index.ts`,
-      handler: 'updateTodo',
-      architecture: Architecture.ARM_64,
-      environment: {
-        TODO_TABLE_NAME: todoTableName
-      }
-    })
-
-    todoTable.grantReadWriteData(updateTodoFn)
-    // ------------------------------------------ //
-
-    // -- parte di CRUD dati in tabella (CRUD)
+    // -- SECTION CRUD TO HANDLER DYNAMODB
     const crudTodoFn = new NodejsFunction(this, 'crudTodoFn', {
       runtime: Runtime.NODEJS_14_X,
       entry: `${__dirname}/../lambda/crud/index.ts`,
@@ -61,21 +35,14 @@ export class cdkApiHelloPostGet extends Stack {
         TODO_TABLE_NAME: todoTable.tableName
       },
     })
-
+    // section role
     todoTable.grantReadWriteData(crudTodoFn)
-    // ------------------------------------------ //
-    
-    new aws_apigateway.LambdaRestApi(this,'EndpointApiCrudGetPost',{
-      handler: createTodoFn
-    })
+    // ------------------------------------------ //  
 
-    new aws_apigateway.LambdaRestApi(this,'EndpointApiUpdate',{
-      handler: updateTodoFn
-    })
-
+    // -- section ApiGateway
     new aws_apigateway.LambdaRestApi(this,'EndpointApiCrud',{
       handler: crudTodoFn,
-      restApiName: "crud111"
+      restApiName: "crud"
     })
 
     
