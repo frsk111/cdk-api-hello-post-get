@@ -127,9 +127,7 @@
         ],
         "Environment": {
           "Variables": {
-            "TODO_TABLE_NAME": {
-              "Ref": "todoTableC937F2F9"
-            },
+            "TODO_TABLE_NAME": "dbProvaApiCrudGetPost",
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
           }
         },

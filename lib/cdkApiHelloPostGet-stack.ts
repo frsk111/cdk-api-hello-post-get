@@ -32,7 +32,7 @@ export class cdkApiHelloPostGet extends Stack {
       handler: 'crudTodo',
       architecture: Architecture.ARM_64,
       environment: {
-        TODO_TABLE_NAME: todoTable.tableName
+        TODO_TABLE_NAME: todoTableName
       },
     })
     // section role
